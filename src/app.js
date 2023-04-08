@@ -48,23 +48,26 @@ app.post("/tweets", (req, res) => {
 })
 
 app.get("/tweets", (req, res) => {
-    const {page} = parseInt(req.query.page)
-    if(page) {
-        if(page === 1 ) {
-            const tenLastPTweets = tweets.map((t) => {
-                const newPFormat = users.find((u) => u.username === t.username ?? u.avatar)
-                return { ...newPFormat, tweet: t.tweet }
-            }).slice(-10).reverse()
-            res.send(tenLastPTweets)
-        }else if(page === 2) {
-            const tenMiddleTweets = tweets.map((t) => {
-                const newTFormat = users.find((u) => u.username === t.username ?? u.avatar)
-                return { ...newTFormat, tweet: t.tweet }
-            }).slice(-11, -20).reverse()
-            res.send(tenMiddleTweets)
-        } else {
+    const {page} = parseInt(req.query)
+    if (page) {
+        if(page < 1) {
             return res.status(400).send("Informe uma página válida!")
         }
+        const limit = 10
+        const start = (page - 1) * limit
+        const end = page * limit
+        if(tweets.length > 10) {
+            const tenTweets = tweets.map((t) => {
+                const newFormat = users.find((u) => u.username === t.username ?? u.avatar)
+                return { ...newFormat, tweet: t.tweet }
+            }).slice(start, end).reverse()
+            return res.send(tenTweets)
+        }
+        const menos10 = tweets.map((t) => {
+            const newFormato = users.find((u) => u.username === t.username ?? u.avatar)
+            return { ...newFormato, tweet: t.tweet }
+        }).reverse()
+        res.send(menos10)
     }
     const tenLastTweets = tweets.map((t) => {
         const newFormat = users.find((u) => u.username === t.username ?? u.avatar)
