@@ -23,7 +23,7 @@ app.post("/tweets", (req, res) => {
     const { username, tweet } = req.body
     const { user } = req.headers
     if (user) {
-        
+
         if (!tweet || (typeof tweet !== 'string')) {
             return res.status(400).send("Todos os campos são obrigatórios!")
         }
@@ -48,6 +48,24 @@ app.post("/tweets", (req, res) => {
 })
 
 app.get("/tweets", (req, res) => {
+    const {page} = parseInt(req.query.page)
+    if(page) {
+        if(page === 1 ) {
+            const tenLastPTweets = tweets.map((t) => {
+                const newPFormat = users.find((u) => u.username === t.username ?? u.avatar)
+                return { ...newPFormat, tweet: t.tweet }
+            }).slice(-10).reverse()
+            res.send(tenLastPTweets)
+        }else if(page === 2) {
+            const tenMiddleTweets = tweets.map((t) => {
+                const newTFormat = users.find((u) => u.username === t.username ?? u.avatar)
+                return { ...newTFormat, tweet: t.tweet }
+            }).slice(-11, -20).reverse()
+            res.send(tenMiddlePTweets)
+        } else {
+            return res.status(400).send("Informe uma página válida!")
+        }
+    }
     const tenLastTweets = tweets.map((t) => {
         const newFormat = users.find((u) => u.username === t.username ?? u.avatar)
         return { ...newFormat, tweet: t.tweet }
