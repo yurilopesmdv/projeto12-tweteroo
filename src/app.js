@@ -44,9 +44,7 @@ app.get("/tweets", (req, res) => {
 app.get("/tweets/:username", (req, res) => {
     const {username} = req.params
     const userExist = tweets.find((u) => u.username === username)
-    if(!userExist) {
-        return res.status(400).send("Usuário não tweetou ainda!")
-    }
+   
     const userTweets = tweets.filter((t) => t.username === username ?? t.tweet)
     res.send(userTweets)
 })
