@@ -61,7 +61,7 @@ app.get("/tweets", (req, res) => {
                 const newTFormat = users.find((u) => u.username === t.username ?? u.avatar)
                 return { ...newTFormat, tweet: t.tweet }
             }).slice(-11, -20).reverse()
-            res.send(tenMiddlePTweets)
+            res.send(tenMiddleTweets)
         } else {
             return res.status(400).send("Informe uma página válida!")
         }
